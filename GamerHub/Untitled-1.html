@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>XXX GAMERHUB | Choose Your Agent</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 20% 10%, #0a0c1a, #020205);
+            color: #edeef2;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* animated background */
+        .valorant-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .particle {
+            position: absolute;
+            background: rgba(255, 70, 85, 0.25);
+            border-radius: 50%;
+            filter: blur(4px);
+            animation: floatParticle 15s infinite linear;
+        }
+        @keyframes floatParticle {
+            0% { transform: translateY(0) scale(0); opacity: 0; }
+            20% { opacity: 0.6; }
+            100% { transform: translateY(-120vh) scale(1.2); opacity: 0; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ---------- AGENT SELECTION PAGE (PAGE 1) ---------- */
+        .agent-selection-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+        .selection-card {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 64px;
+            padding: 3rem 2rem;
+            border: 2px solid #ff4655;
+            max-width: 600px;
+            width: 90%;
+            animation: fadeInUp 0.6s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .selection-card h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #ff4655, #ff9642);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .selection-card p {
+            margin: 15px 0;
+            color: #bbc3d9;
+        }
+        .agent-grid-select {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .agent-option {
+            background: rgba(30, 34, 48, 0.8);
+            border-radius: 50px;
+            padding: 15px 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 70, 85, 0.4);
+            text-align: center;
+        }
+        .agent-option:hover {
+            background: #ff4655;
+            transform: scale(1.05);
+            border-color: white;
+        }
+        .agent-option.selected {
+            background: #ff4655;
+            border: 2px solid white;
+            box-shadow: 0 0 20px rgba(255,70,85,0.6);
+        }
+        .agent-icon {
+            font-size: 2.5rem;
+            display: block;
+        }
+        .agent-display-name {
+            font-weight: bold;
+            margin-top: 8px;
+        }
+        .agent-alt {
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
+        .enter-arsenal-btn {
+            background: #ff4655;
+            border: none;
+            padding: 14px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 60px;
+            color: white;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.2s;
+        }
+        .enter-arsenal-btn:hover {
+            transform: scale(1.02);
+            background: #e63e4c;
+            box-shadow: 0 0 25px #ff4655;
+        }
+
+        /* ---------- MAIN CLIPS PAGE (PAGE 2) ---------- */
+        .main-clips-page {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .main-clips-page.visible {
+            display: block;
+            opacity: 1;
+        }
+        .glow-header { text-align: center; margin-bottom: 2rem; }
+        .logo {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff4655, #ff9642);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .selected-agent-badge {
+            background: rgba(255,70,85,0.2);
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 60px;
+            margin-top: 12px;
+            font-size: 0.9rem;
+            border: 1px solid #ff4655;
+        }
+        .color-shift-bar {
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #ff4655, #ffb347, #6a0dad, #ff4655);
+            background-size: 300%;
+            animation: slideGradient 5s infinite linear;
+            margin: 20px 0;
+        }
+        @keyframes slideGradient {
+            0% { background-position: 0%; }
+            100% { background-position: 300%; }
+        }
+        .agents-gallery {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
+            border-radius: 48px;
+            padding: 24px;
+            margin: 30px 0;
+            border: 1px solid rgba(255,70,85,0.3);
+        }
+        .agents-scroll {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 28px;
+        }
+        .agent-card {
+            text-align: center;
+            cursor: pointer;
+            transition: 0.25s;
+            background: rgba(20,24,40,0.7);
+            border-radius: 100px;
+            padding: 12px 20px;
+            width: 120px;
+            border: 1px solid rgba(255,90,110,0.5);
+            position: relative;
+        }
+        .agent-card .tooltip-text {
+            visibility: hidden;
+            opacity: 0;
+            background: linear-gradient(135deg,#ff4655,#c0392b);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 12px;
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            transition: 0.2s;
+            pointer-events: none;
+        }
+        .agent-card:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        .agent-card:hover { transform: translateY(-8px); background: #ff4655cc; }
+        .agent-img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ffb347;
+            background: #1a1a2e;
+            margin: 0 auto 10px;
+        }
+        .agent-name { font-weight: 800; }
+        .tabs-warpper { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin: 30px 0; }
+        .tab-btn {
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            border: none;
+            padding: 12px 28px;
+            font-weight: 700;
+            border-radius: 60px;
+            color: #eef2ff;
+            cursor: pointer;
+            border: 1px solid rgba(255,70,85,0.4);
+        }
+        .tab-btn.active { background: linear-gradient(95deg,#ff4655,#f53b57); color: white; box-shadow: 0 0 15px #ff4655; }
+        .page-panel { display: none; animation: fade 0.3s; }
+        .page-panel.active-panel { display: block; }
+        @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+        .clips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+            gap: 28px;
+        }
+        .clip-card {
+            background: rgba(10,12,22,0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            overflow: hidden;
+            border: 1px solid rgba(255,70,85,0.4);
+        }
+        .video-wrapper video { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 24px; padding: 6px; }
+        .clip-info { padding: 12px 18px; }
+        .badge-cat { background: #ff4655; font-size: 0.7rem; border-radius: 40px; padding: 3px 12px; display: inline-block; }
+        .delete-clip { background: none; border: none; color: #aaa; cursor: pointer; float: right; }
+        .admin-zone {
+            background: linear-gradient(145deg,#0f111f,#080b14);
+            border-radius: 32px;
+            padding: 18px 24px;
+            margin-bottom: 35px;
+            border: 1px solid #ff4655;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .upload-group { display: flex; gap: 12px; flex-wrap: wrap; }
+        .fake-upload-btn { background: #2a2f42; padding: 8px 20px; border-radius: 40px; cursor: pointer; }
+        .fake-upload-btn:hover { background: #ff4655; }
+        footer { text-align: center; margin-top: 50px; opacity: 0.6; font-size: 0.8rem; }
+        .back-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .back-btn:hover { background: #ff4655; }
+    </style>
+</head>
+<body>
+<div class="valorant-bg" id="bgAnim"></div>
+
+<!-- PAGE 1: Which Agent Are You? -->
+<div id="agentSelectionPage" class="agent-selection-page">
+    <div class="selection-card">
+        <h1><i class="fas fa-user-secret"></i> WHICH AGENT ARE YOU?</h1>
+        <p>Select your identity — your alt name will shine</p>
+        <div class="agent-grid-select" id="agentSelectGrid"></div>
+        <button id="confirmAgentBtn" class="enter-arsenal-btn">⚡ ENTER THE ARSENAL ⚡</button>
+    </div>
+</div>
+
+<!-- PAGE 2: Main Clips Hub -->
+<div id="mainClipsPage" class="main-clips-page">
+    <div class="container">
+        <button id="backToAgentBtn" class="back-btn"><i class="fas fa-arrow-left"></i> Change Agent</button>
+        <div class="glow-header">
+            <div class="logo"><i class="fas fa-skull-crossbones"></i> XXX GAMERHUB</div>
+            <div id="selectedAgentDisplay" class="selected-agent-badge">Agent: Not selected</div>
+            <div class="color-shift-bar"></div>
+        </div>
+
+        <!-- Agents Gallery (full list) -->
+        <div class="agents-gallery">
+            <div class="agents-title"><i class="fas fa-users"></i> 🔥 CLICK ANY AGENT FOR VOICELINE 🔥</div>
+            <div class="agents-scroll" id="agentsGalleryContainer"></div>
+        </div>
+
+        <!-- 5 TABS FOR CLIPS -->
+        <div class="tabs-warpper">
+            <button class="tab-btn" data-page="ace"><i class="fas fa-trophy"></i> ACE</button>
+            <button class="tab-btn" data-page="whiff"><i class="fas fa-crosshairs"></i> WHIFF</button>
+            <button class="tab-btn" data-page="lore"><i class="fas fa-laugh-squint"></i> LORE</button>
+            <button class="tab-btn" data-page="uncensored"><i class="fas fa-eye-slash"></i> UNCENSORED</button>
+            <button class="tab-btn" data-page="noscope"><i class="fas fa-bullseye"></i> NOSCOPE</button>
+        </div>
+
+        <div class="admin-zone">
+            <div><i class="fas fa-lock-open"></i> <span>🎬 OWNER MODE — UPLOAD CLIPS</span></div>
+            <div class="upload-group" id="dynamicUploadGroup"></div>
+        </div>
+
+        <div id="page-ace" class="page-panel"><div class="clips-grid" id="aceGrid"></div></div>
+        <div id="page-whiff" class="page-panel"><div class="clips-grid" id="whiffGrid"></div></div>
+        <div id="page-lore" class="page-panel"><div class="clips-grid" id="loreGrid"></div></div>
+        <div id="page-uncensored" class="page-panel"><div class="clips-grid" id="uncensoredGrid"></div></div>
+        <div id="page-noscope" class="page-panel"><div class="clips-grid" id="noscopeGrid"></div></div>
+        <footer>⚡ Selected agent will remember you — Valorant theme</footer>
+    </div>
+</div>
+
+<script>
+    // ========== AGENT DATA (your custom names and alt names) ==========
+    const AGENTS_FULL = [
+        { displayName: "Atonu", altName: "oooBinaryooo", voice: "", img: "https://placehold.co/70x70/ff4655/white?text=AT" },
+        { displayName: "Zayeem", altName: "ForSaken", voice: "", img: "https://placehold.co/70x70/ff7b2c/white?text=ZY" },
+        { displayName: "Naveen", altName: "KN Jomidar", voice: "", img: "https://placehold.co/70x70/ff9642/white?text=NV" },
+        { displayName: "Joy", altName: "Calmsoul", voice: "", img: "https://placehold.co/70x70/ffb347/white?text=JO" },
+        { displayName: "Areeb", altName: "Xrtist", voice: "", img: "https://placehold.co/70x70/c0392b/white?text=AR" },
+        { displayName: "Rasin", altName: "Lyx", voice: "", img: "https://placehold.co/70x70/6a0dad/white?text=RS" },
+        { displayName: "Siam", altName: "ZZZ", voice: "", img: "https://placehold.co/70x70/2c3e50/white?text=SM" },
+        { displayName: "Saniat", altName: "CheezOmelette", voice: "", img: "https://placehold.co/70x70/ff4655/white?text=SN" }
+    ];
+
+    let currentSelectedAgent = null;  // stores the agent object
+
+    // Load custom images/voice from localStorage
+    function loadAgentCustom() {
+        const saved = localStorage.getItem("xxx_custom_agents_full");
+        if (saved) {
+            try {
+                const custom = JSON.parse(saved);
+                for (let i = 0; i < AGENTS_FULL.length && i < custom.length; i++) {
+                    if (custom[i].img) AGENTS_FULL[i].img = custom[i].img;
+                    if (custom[i].voice) AGENTS_FULL[i].voice = custom[i].voice;
+                }
+            } catch(e) {}
+        }
+    }
+
+    function saveAgentCustom() {
+        const toSave = AGENTS_FULL.map(a => ({ img: a.img, voice: a.voice }));
+        localStorage.setItem("xxx_custom_agents_full", JSON.stringify(toSave));
+    }
+
+    // Storage for clips
+    const STORAGE = {
+        ace: 'valorant_clips_ace_v2',
+        whiff: 'valorant_clips_whiff_v2',
+        lore: 'valorant_clips_lore_v2',
+        uncensored: 'valorant_clips_uncensored_v2',
+        noscope: 'valorant_clips_noscope_v2'
+    };
+
+    function defaultClips(cat) {
+        const demo = [{ url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", title: "Sample Clip" }];
+        return demo;
+    }
+    function getClips(cat) {
+        const raw = localStorage.getItem(STORAGE[cat]);
+        return raw ? JSON.parse(raw) : defaultClips(cat);
+    }
+    function saveClips(cat, clips) { localStorage.setItem(STORAGE[cat], JSON.stringify(clips)); }
+    function renderGrid(cat) {
+        const container = document.getElementById(`${cat}Grid`);
+        if (!container) return;
+        const clips = getClips(cat);
+        if (clips.length === 0) { container.innerHTML = `<div class="empty-message">No clips yet. Upload!</div>`; return; }
+        container.innerHTML = clips.map((clip, idx) => `
+            <div class="clip-card">
+                <div class="video-wrapper"><video controls src="${escapeHtml(clip.url)}"></video></div>
+                <div class="clip-info">
+                    <div><span>🎬 ${escapeHtml(clip.title)}</span><button class="delete-clip" data-cat="${cat}" data-idx="${idx}"><i class="fas fa-trash-alt"></i></button></div>
+                    <div class="badge-cat">${cat.toUpperCase()}</div>
+                </div>
+            </div>
+        `).join('');
+        document.querySelectorAll(`.delete-clip[data-cat="${cat}"]`).forEach(btn => {
+            btn.addEventListener('click', () => {
+                const c = btn.getAttribute('data-cat');
+                const i = parseInt(btn.getAttribute('data-idx'));
+                let arr = getClips(c);
+                arr.splice(i, 1);
+                saveClips(c, arr);
+                renderGrid(c);
+            });
+        });
+    }
+    function addClip(cat, url, title) {
+        let clips = getClips(cat);
+        clips.push({ url, title });
+        saveClips(cat, clips);
+        renderGrid(cat);
+    }
+
+    // Voice play
+    function playVoice(agentName) {
+        const agent = AGENTS_FULL.find(a => a.displayName === agentName);
+        if (agent && agent.voice && agent.voice.trim() !== "") {
+            new Audio(agent.voice).play().catch(e=>console.warn);
+        } else {
+            const utterance = new SpeechSynthesisUtterance(`${agentName} says supercalifragilisticexpialidocious`);
+            speechSynthesis.cancel();
+            speechSynthesis.speak(utterance);
+        }
+        const toast = document.createElement('div');
+        toast.innerText = `${agentName} 🔊 voiceline!`;
+        toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#ff4655;color:white;padding:12px 24px;border-radius:60px;z-index:9999;';
+        document.body.appendChild(toast);
+        setTimeout(()=>toast.remove(),1500);
+    }
+
+    // Build Agent selection grid (page 1)
+    function buildAgentSelectionGrid() {
+        const grid = document.getElementById('agentSelectGrid');
+        grid.innerHTML = AGENTS_FULL.map((agent, idx) => `
+            <div class="agent-option" data-agent-idx="${idx}">
+                <span class="agent-icon"><i class="fas fa-user-ninja"></i></span>
+                <div class="agent-display-name">${escapeHtml(agent.displayName)}</div>
+                <div class="agent-alt">${escapeHtml(agent.altName)}</div>
+            </div>
+        `).join('');
+        document.querySelectorAll('.agent-option').forEach(opt => {
+            opt.addEventListener('click', () => {
+                document.querySelectorAll('.agent-option').forEach(o => o.classList.remove('selected'));
+                opt.classList.add('selected');
+                const idx = opt.getAttribute('data-agent-idx');
+                currentSelectedAgent = AGENTS_FULL[idx];
+            });
+        });
+    }
+
+    // Build main page agents gallery
+    function buildMainAgentsGallery() {
+        const container = document.getElementById('agentsGalleryContainer');
+        container.innerHTML = AGENTS_FULL.map(agent => `
+            <div class="agent-card" data-agent-name="${agent.displayName}">
+                <img class="agent-img" src="${agent.img}" onerror="this.src='https://placehold.co/70x70/ff4655/white?text=${agent.displayName.charAt(0)}'">
+                <div class="agent-name">${escapeHtml(agent.displayName)}</div>
+                <div class="tooltip-text">🔮 ${escapeHtml(agent.altName)} 🔮</div>
+            </div>
+        `).join('');
+        document.querySelectorAll('.agent-card').forEach(card => {
+            card.addEventListener('click', () => playVoice(card.getAttribute('data-agent-name')));
+        });
+    }
+
+    function updateSelectedAgentDisplay() {
+        const displayDiv = document.getElementById('selectedAgentDisplay');
+        if (currentSelectedAgent) {
+            displayDiv.innerHTML = `<i class="fas fa-id-badge"></i> Current Agent: ${currentSelectedAgent.displayName} (${currentSelectedAgent.altName})`;
+        } else {
+            displayDiv.innerHTML = `⚔️ No agent selected ⚔️`;
+        }
+    }
+
+    // Upload system
+    function setupUploads() {
+        const cats = ['ace','whiff','lore','uncensored','noscope'];
+        const group = document.getElementById('dynamicUploadGroup');
+        group.innerHTML = '';
+        cats.forEach(cat => {
+            const label = document.createElement('label');
+            label.className = 'fake-upload-btn';
+            label.innerHTML = `<i class="fas fa-upload"></i> ${cat.toUpperCase()}`;
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'video/mp4,video/webm';
+            input.style.display = 'none';
+            input.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const url = URL.createObjectURL(file);
+                const title = prompt("Clip title:", `${cat} clip`);
+                addClip(cat, url, title || `${cat} moment`);
+                input.value = '';
+                alert(`✅ ${cat.toUpperCase()} uploaded`);
+            });
+            label.appendChild(input);
+            label.addEventListener('click', () => input.click());
+            group.appendChild(label);
+        });
+    }
+
+    // Tabs
+    function initTabs() {
+        const tabs = document.querySelectorAll('.tab-btn');
+        const pages = { ace: document.getElementById('page-ace'), whiff: document.getElementById('page-whiff'), lore: document.getElementById('page-lore'), uncensored: document.getElementById('page-uncensored'), noscope: document.getElementById('page-noscope') };
+        function setActive(page) {
+            Object.values(pages).forEach(p => p.classList.remove('active-panel'));
+            pages[page].classList.add('active-panel');
+            tabs.forEach(t => t.classList.remove('active'));
+            document.querySelector(`.tab-btn[data-page="${page}"]`).classList.add('active');
+        }
+        tabs.forEach(t => t.addEventListener('click', () => setActive(t.getAttribute('data-page'))));
+        setActive('ace');
+    }
+
+    function renderAllClips() { ['ace','whiff','lore','uncensored','noscope'].forEach(c => renderGrid(c)); }
+
+    // Page switching logic
+    function initPageTransition() {
+        const selectionPage = document.getElementById('agentSelectionPage');
+        const mainPage = document.getElementById('mainClipsPage');
+        const confirmBtn = document.getElementById('confirmAgentBtn');
+        const backBtn = document.getElementById('backToAgentBtn');
+
+        confirmBtn.addEventListener('click', () => {
+            if (!currentSelectedAgent) {
+                alert("Please select an agent first!");
+                return;
+            }
+            localStorage.setItem("selectedAgent", JSON.stringify(currentSelectedAgent));
+            updateSelectedAgentDisplay();
+            selectionPage.style.display = 'none';
+            mainPage.classList.add('visible');
+        });
+
+        backBtn.addEventListener('click', () => {
+            mainPage.classList.remove('visible');
+            selectionPage.style.display = 'flex';
+            // re-fetch selection highlight
+        });
+
+        // check if previously selected agent
+        const savedAgent = localStorage.getItem("selectedAgent");
+        if (savedAgent) {
+            try {
+                currentSelectedAgent = JSON.parse(savedAgent);
+                updateSelectedAgentDisplay();
+                selectionPage.style.display = 'none';
+                mainPage.classList.add('visible');
+            } catch(e) {}
+        }
+
+    }
+
+    // particles
+    function createParticles() {
+        const container = document.getElementById('bgAnim');
+        for (let i=0;i<50;i++) {
+            const p = document.createElement('div');
+            p.classList.add('particle');
+            p.style.width = `${Math.random() * 8 + 2}px`;
+            p.style.height = p.style.width;
+            p.style.left = `${Math.random() * 100}%`;
+            p.style.animationDuration = `${Math.random() * 12 + 8}s`;
+            p.style.animationDelay = `${Math.random() * 10}s`;
+            p.style.background = `rgba(255,${70+Math.random()*100},85,${Math.random()*0.4})`;
+            container.appendChild(p);
+        }
+    }
+
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+
+    loadAgentCustom();
+    createParticles();
+    buildAgentSelectionGrid();
+    buildMainAgentsGallery();
+    setupUploads();
+    initTabs();
+    renderAllClips();
+    initPageTransition();
+    if (currentSelectedAgent) updateSelectedAgentDisplay();
+</script>
+</body>
+</html>
